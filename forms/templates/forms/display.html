@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Title of the document</title>
+<style>
+table {
+    width:100%;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+   background-color:#fff;
+}
+table#t01 th {
+    background-color: black;
+    color: white;
+}
+</style>
+</head>
+<body>
+
+<table id="t01">
+  <tr>
+    <th>No.</th>
+    <th>Start Date</th>
+    <th>End Data</th>
+    <th>Start Time</th>
+    <th>End Time</th>
+    <th>PIC</th>
+	<th>User</th>
+	<th>Status</th>
+	<th>Detail</th>
+  </tr>
+  {% for item in schedule_and_pic_set %}
+  <tr>
+  	<td> {{ forloop.counter }} </td>
+    <td> {{ item.start_date }} </td>
+    <td> {{ item.end_date }} </td>
+    <td> {{ item.start_time }} </td>
+    <td> {{ item.end_time }} </td>
+    <td> {{ item.pic }} </td>
+    <td> {{ item.maintenance.user.username }} </td>
+    <td> 
+    	{% if item.maintenance.status == 1 %}
+    		Approved
+    	{% elif item.maintenance.status == 2 %}
+    		Rejected
+    	{% else %}
+    		Waiting	
+		{% endif %}
+    </td>
+    <td> 
+    	<form action="../detail/"  method="POST">
+    		{% csrf_token %}
+    		<input type="hidden" name="maintenance_id" value=2>
+    		<input type="submit" value="Detail" />
+		</form> 
+	</td>
+  </tr>  
+  {% endfor %} 
+ 
+</table>
+
+</body>
+
+</html>

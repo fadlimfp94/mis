@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Title of the document</title>
+<style>
+table {
+    width:100%;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+   background-color:#fff;
+}
+table#t01 th {
+    background-color: black;
+    color: white;
+}
+</style>
+</head>
+<body>
+
+<table id="t01">
+  <tr>
+    Schedule and PIC
+  </tr>
+  <tr> 
+      <td>Start Date</td>
+      <td>{{ schedlue_and_pic.start_date }}</td> 	
+  </tr>
+  <tr>
+      <td>End Date</td>
+      <td>{{ schedlue_and_pic.end_date }}</td>     
+  </tr>
+  <tr>
+      <td>Start Time</td>
+      <td>{{ schedlue_and_pic.start_time }}</td>     
+  </tr>
+  <tr>
+      <td>End Time</td>
+      <td>{{ schedlue_and_pic.end_time }}</td>     
+  </tr>
+  <tr>
+      <td>PIC</td>
+      <td>{{ schedlue_and_pic.pic }}</td>     
+  </tr>
+  <tr>
+      <td>Phone Number</td>
+      <td>{{ schedlue_and_pic.phone_number }}</td>     
+  </tr>
+  <tr>
+      <td>Department</td>
+      <td>{{ schedlue_and_pic.department }}</td>     
+  </tr> 
+</table>
+
+</body>
+
+</html>
