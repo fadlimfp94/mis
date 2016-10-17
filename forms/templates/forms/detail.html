@@ -35,33 +35,149 @@ table#t01 th {
   </tr>
   <tr> 
       <td>Start Date</td>
-      <td>{{ schedlue_and_pic.start_date }}</td> 	
+      <td>{{ schedule_and_pic.start_date }}</td> 	
   </tr>
   <tr>
       <td>End Date</td>
-      <td>{{ schedlue_and_pic.end_date }}</td>     
+      <td>{{ schedule_and_pic.end_date }}</td>     
   </tr>
   <tr>
       <td>Start Time</td>
-      <td>{{ schedlue_and_pic.start_time }}</td>     
+      <td>{{ schedule_and_pic.start_time }}</td>     
   </tr>
   <tr>
       <td>End Time</td>
-      <td>{{ schedlue_and_pic.end_time }}</td>     
+      <td>{{ schedule_and_pic.end_time }}</td>     
   </tr>
   <tr>
       <td>PIC</td>
-      <td>{{ schedlue_and_pic.pic }}</td>     
+      <td>{{ schedule_and_pic.pic }}</td>     
   </tr>
   <tr>
       <td>Phone Number</td>
-      <td>{{ schedlue_and_pic.phone_number }}</td>     
+      <td>{{ schedule_and_pic.phone_number }}</td>     
   </tr>
   <tr>
       <td>Department</td>
-      <td>{{ schedlue_and_pic.department }}</td>     
+      <td>{{ schedule_and_pic.department }}</td>     
   </tr> 
 </table>
+<br><br>
+<table id="t01">
+  <tr>
+    Location and Device
+  </tr>
+  <tr> 
+      <td>Fiberhood</td>
+      <td>{{ location_and_device.fiberhood }}</td>  
+  </tr>
+  <tr>
+      <td>Site</td>
+      <td>{{ location_and_device.site }}</td>     
+  </tr>
+  <tr>
+      <td>Cluster</td>
+      <td>{{ location_and_device.cluster }}</td>     
+  </tr>
+  <tr>
+      <td>Floor / Block</td>
+      <td>{{ location_and_device.floor_slash_block }}</td>     
+  </tr>
+  <tr>
+      <td>Device ID</td>
+      <td>{{ location_and_device.device_id }}</td>     
+  </tr>
+  <tr>
+      <td>Device Port</td>
+      <td>{{ location_and_device.device_port }}</td>     
+  </tr> 
+</table>
+<br><br>
+<table id="t01">
+  <tr>
+    Activity
+  </tr>
+  <tr> 
+      <td>Sympton of Problem</td>
+      <td>{{ activity.symptom_of_problem }}</td>  
+  </tr>
+  <tr>
+      <td>Action Plan</td>
+      <td>{{ activity.action_plan }}</td>     
+  </tr>
+  <tr>
+      <td>Estimation</td>
+      <td>{{ activity.estimation_duration }}</td>     
+  </tr> 
+</table>
+<br><br>
+<table id="t01">
+  <tr>
+    Customer Impact
+  </tr>
+  <tr> 
+      <td>Count of Customer Impact</td>
+      <td>{{ customer_impact.count_of_customer_impact }}</td>  
+  </tr>
+  <tr>
+      <td>Network Interrupt</td>
+      <td>{{ customer_impact.network_interrupt }}</td>     
+  </tr>
+  <tr>
+      <td>Service Interrupt</td>
+      <td>{{ customer_impact.service_interrupt }}</td>     
+  </tr> 
+</table>
+<br><br>
+<table id="t01">
+  <tr>
+    Device Replacement
+  </tr>
+  <tr> 
+      <td>Old Device ID</td>
+      <td>{{ device_replacement.old_device_id }}</td>  
+  </tr>
+  <tr>
+      <td>Old Device Type</td>
+      <td>{{ device_replacement.old_device_type }}</td>     
+  </tr>
+  <tr>
+      <td>Old Serial Number</td>
+      <td>{{ device_replacement.old_serial_number}}</td>     
+  </tr>
+  <tr>
+      <td>Old Barcode</td>
+      <td>{{ device_replacement.old_barcode }}</td>     
+  </tr>
+  <tr> 
+      <td>New Device ID</td>
+      <td>{{ device_replacement.new_device_id }}</td>  
+  </tr>
+  <tr>
+      <td>New Device Type</td>
+      <td>{{ device_replacement.new_device_type }}</td>     
+  </tr>
+  <tr>
+      <td>New Serial Number</td>
+      <td>{{ device_replacement.new_serial_number}}</td>     
+  </tr>
+  <tr>
+      <td>New Barcode</td>
+      <td>{{ device_replacement.new_barcode }}</td>     
+  </tr>
+</table>
+<br><br>
+<form action="../approve/"  method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
+        <input type="submit" value="Approve" />
+</form>
+<form action="../reject/"  method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
+        <input type="submit" value="Reject" />
+</form>
+
 
 </body>
 

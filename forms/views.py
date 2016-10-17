@@ -1,11 +1,26 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import *
+from django.contrib import messages
 	
 # Create your views here.
 
 def index(request):
     return HttpResponse("Hello, world. You're at the form index.")
+
+def approve(request):
+    maintenance = Maintenance.objects.get(id=request.POST.get('maintenance_id'))
+    maintenance.status = 1
+    maintenance.save()
+    messages.success(request, 'Maintenance Application was Approved')
+    return redirect('/forms/display', message = 'maintenance application was approved')
+
+def reject(request):
+    maintenance = Maintenance.objects.get(id=request.POST.get('maintenance_id'))
+    maintenance.status = 2
+    maintenance.save()
+    messages.error(request, 'Maintenance Application was Rejected')
+    return redirect('/forms/display')
 
 def detail(request):
     maintenance = Maintenance.objects.get(id=request.POST.get('maintenance_id'))

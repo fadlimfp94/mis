@@ -29,6 +29,12 @@ table#t01 th {
 </head>
 <body>
 
+<div class="messages">
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+</div>
+
 <table id="t01">
   <tr>
     <th>No.</th>
@@ -62,7 +68,7 @@ table#t01 th {
     <td> 
     	<form action="../detail/"  method="POST">
     		{% csrf_token %}
-    		<input type="hidden" name="maintenance_id" value=2>
+    		<input type="hidden" name="maintenance_id" value={{item.maintenance_id}}>
     		<input type="submit" value="Detail" />
 		</form> 
 	</td>
