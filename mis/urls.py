@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
+from forms.forms import LoginForm
 
 urlpatterns = [
     url(r'^forms/', include('forms.urls')),

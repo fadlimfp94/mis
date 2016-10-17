@@ -1,14 +1,17 @@
 from django.conf.urls import url
-
-from . import views
+from django.contrib.auth.views import login, logout
+from . import views, forms
 
 app_name = 'forms'
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.home, name='home'),
+    #url(r'^$', views.index, name='index'),
 	url(r'^create/', views.create_form, name='create_form'),
     url(r'^display/', views.display, name='display'),
     url(r'^detail/', views.detail, name='detail'),
     url(r'^approve/', views.approve, name='approve'),
-    url(r'^reject/', views.reject, name='reject'),	
+    url(r'^reject/', views.reject, name='reject'),
+    url(r'^login/$', login, {'template_name': 'login.html', 'authentication_form': forms.LoginForm}, name='login'),
+    url(r'^logout/$', logout, {'next_page': '/forms/login'}, name='logout'),	
 ]

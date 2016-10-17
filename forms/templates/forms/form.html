@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Title of the document</title>
-</head>
-
-<body>
+{% extends 'base.html' %}
+{% block content %}
 <form action="{url 'create_form'}" method="post">
     {% csrf_token %}
     {{ schedule_and_pic_form.as_p }}
@@ -19,6 +13,4 @@
 	{{ device_replacement_form.as_p }}
     <input type="submit" value="Submit" />
 </form>
-</body>
-
-</html>
+{% endblock %}

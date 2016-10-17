@@ -1,6 +1,7 @@
 from django.forms import *
 from .models import * 
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.forms import AuthenticationForm 
 
 class ScheduleAndPICForm(ModelForm):
     class Meta:
@@ -30,4 +31,9 @@ class DeviceReplacementForm(ModelForm):
     class Meta:
         model = DeviceReplacement
         fields = ('old_device_id', 'old_device_type','old_serial_number','old_barcode','new_device_id','new_device_type','new_serial_number','new_barcode')		
-	
+
+class LoginForm(AuthenticationForm):
+    username = CharField(label="Username", max_length=30, 
+                               widget=TextInput(attrs={'class': 'form-control', 'name': 'username'}))
+    password = CharField(label="Password", max_length=30, 
+                               widget=PasswordInput(attrs={'class': 'form-control', 'name': 'password'}))	
