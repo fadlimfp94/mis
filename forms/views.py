@@ -11,17 +11,13 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return redirect('/forms/display')
 
-@login_required(login_url='login/')	
-def index(request):
-    return HttpResponse("Hello, world. You're at the form index.")
-
 @login_required(login_url='login/')
 def approve(request):
     maintenance = Maintenance.objects.get(id=request.POST.get('maintenance_id'))
     maintenance.status = 1
     maintenance.save()
     messages.success(request, 'Maintenance Application was Approved')
-    return redirect('/forms/display', message = 'maintenance application was approved')
+    return redirect('/forms/display')
 
 @login_required(login_url='login/')
 def reject(request):
@@ -56,12 +52,13 @@ def create_form(request):
     if request.method == "POST":
         schedule_and_pic_form = ScheduleAndPICForm(request.POST)
         location_and_device_form = LocationAndDeviceForm(request.POST)
-        activity_form = ActivityForm(request.POST)
+        activity_form = ActivityForm(request.POST, request.FILES)
         customer_impact_form = CustomerImpactForm(request.POST)
         device_replacement_form = DeviceReplacementForm(request.POST)
         is_valid = schedule_and_pic_form.is_valid() and location_and_device_form.is_valid() and activity_form.is_valid() and customer_impact_form.is_valid() and device_replacement_form.is_valid()
         if is_valid is True:
-            maintenance_obj = Maintenance.objects.get(user=(User.objects.get(id=1))) 
+            maintenance_obj = Maintenance(user=request.user, status=0)
+            maintenance_obj.save()
             schedule_and_pic_obj = schedule_and_pic_form.save(commit=False)
             schedule_and_pic_obj.maintenance = maintenance_obj
             schedule_and_pic_obj.save()
@@ -77,7 +74,8 @@ def create_form(request):
             device_replacement_obj = device_replacement_form.save(commit=False)
             device_replacement_obj.maintenance = maintenance_obj
             device_replacement_obj.save()
-            return HttpResponse("Hello, success")
+            messages.success(request, 'Maintenance Application was Submitted')
+            return redirect('/forms/display')
     else:
         schedule_and_pic_form = ScheduleAndPICForm()
         location_and_device_form = LocationAndDeviceForm()

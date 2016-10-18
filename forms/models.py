@@ -39,6 +39,7 @@ class Activity(models.Model):
     symptom_of_problem = models.TextField()
     action_plan = models.TextField()
     estimation_duration = models.CharField(max_length=30)
+    document = models.FileField()
 
 #@python_2_unicode_compatible	
 class CustomerImpact(models.Model):

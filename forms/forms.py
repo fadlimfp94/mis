@@ -20,7 +20,7 @@ class LocationAndDeviceForm(ModelForm):
 class ActivityForm(ModelForm):
     class Meta:
         model = Activity
-        fields = ('symptom_of_problem','action_plan','estimation_duration')		
+        fields = ('symptom_of_problem','action_plan','estimation_duration','document')		
 	
 class CustomerImpactForm(ModelForm):
     class Meta:
