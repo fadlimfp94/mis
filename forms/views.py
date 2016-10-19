@@ -3,31 +3,36 @@ from django.http import HttpResponse
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
 
-# Create your views here.
-# this login required decorator is to not allow to any  
-# view without authenticating
-@login_required(login_url='login/')
+
+def staff_check(user):
+    return user.is_staff
+
+@login_required(login_url='forms:login')
 def home(request):
     return redirect('/forms/display')
 
-@login_required(login_url='login/')
+@login_required(login_url='forms:login')
+@user_passes_test(staff_check)
 def approve(request):
     maintenance = Maintenance.objects.get(id=request.POST.get('maintenance_id'))
-    maintenance.status = 1
+    maintenance.status = 2
     maintenance.save()
     messages.success(request, 'Maintenance Application was Approved')
     return redirect('/forms/display')
 
-@login_required(login_url='login/')
+@login_required(login_url='forms:login')
+@user_passes_test(staff_check)
 def reject(request):
     maintenance = Maintenance.objects.get(id=request.POST.get('maintenance_id'))
-    maintenance.status = 2
+    maintenance.status = 3
     maintenance.save()
     messages.error(request, 'Maintenance Application was Rejected')
     return redirect('/forms/display')
 
-@login_required(login_url='login/')
+@login_required(login_url='forms:login')
 def detail(request):
     maintenance = Maintenance.objects.get(id=request.POST.get('maintenance_id'))
     schedule_and_pic = ScheduleAndPIC.objects.get(maintenance_id=maintenance.id)
@@ -37,17 +42,24 @@ def detail(request):
     device_replacement = DeviceReplacement.objects.get(maintenance_id=maintenance.id)
     return render(request, 'forms/detail.html', {'maintenance' : maintenance, 'schedule_and_pic' : schedule_and_pic, 'location_and_device' : location_and_device, 'activity' : activity, 'customer_impact' : customer_impact, 'device_replacement' : device_replacement})
 
-@login_required(login_url='login/')
+@login_required(login_url='forms:login')
 def display(request):
-    maintenance_set = Maintenance.objects.all()
-    schedule_and_pic_set = ScheduleAndPIC.objects.all()
-    location_and_device_set = LocationAndDevice.objects.all()
-    activity_set = Activity.objects.all()
-    customer_impact_set = CustomerImpact.objects.all()
-    device_replacement_set = DeviceReplacement.objects.all()
-    return render(request, 'forms/display.html', {'maintenance_set' : maintenance_set, 'schedule_and_pic_set' : schedule_and_pic_set, 'location_and_device_set' : location_and_device_set, 'activity_set' : activity_set, 'customer_impact_set' : customer_impact_set, 'device_replacement_set' : device_replacement_set})
+    if request.user.is_staff:
+        schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','start_date')
+    else:
+        schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id).order_by('maintenance__status','start_date')
+    page = request.GET.get('page', 1)
+    paginator = Paginator(schedule_and_pic_set, 10)
+    try:
+        result = paginator.page(page)
+    except PageNotAnInteger:
+        result = paginator.page(1)
+    except EmptyPage:
+        result = paginator.page(paginator.num_pages)    
+    return render(request, 'forms/display.html', {'schedule_and_pic_set' : result})    
+    #return render(request, 'forms/display.html', {'schedule_and_pic_set' : schedule_and_pic_set})
 
-@login_required(login_url='login/')	
+@login_required(login_url='forms:login')	
 def create_form(request):  
     if request.method == "POST":
         schedule_and_pic_form = ScheduleAndPICForm(request.POST)
@@ -57,7 +69,7 @@ def create_form(request):
         device_replacement_form = DeviceReplacementForm(request.POST)
         is_valid = schedule_and_pic_form.is_valid() and location_and_device_form.is_valid() and activity_form.is_valid() and customer_impact_form.is_valid() and device_replacement_form.is_valid()
         if is_valid is True:
-            maintenance_obj = Maintenance(user=request.user, status=0)
+            maintenance_obj = Maintenance(user=request.user, status=1)
             maintenance_obj.save()
             schedule_and_pic_obj = schedule_and_pic_form.save(commit=False)
             schedule_and_pic_obj.maintenance = maintenance_obj

@@ -10,7 +10,7 @@
   <tr>
     <th>No.</th>
     <th>Start Date</th>
-    <th>End Data</th>
+    <th>End Date</th>
     <th>Start Time</th>
     <th>End Time</th>
     <th>PIC</th>
@@ -20,7 +20,7 @@
   </tr>
   {% for item in schedule_and_pic_set %}
   <tr>
-  	<td> {{ forloop.counter }} </td>
+  	<td>  {{ forloop.counter0|add:schedule_and_pic_set.start_index }} </td>
     <td> {{ item.start_date }} </td>
     <td> {{ item.end_date }} </td>
     <td> {{ item.start_time }} </td>
@@ -28,16 +28,16 @@
     <td> {{ item.pic }} </td>
     <td> {{ item.maintenance.user.username }} </td>
     <td> 
-    	{% if item.maintenance.status == 1 %}
+    	{% if item.maintenance.status == 2 %}
     		Approved
-    	{% elif item.maintenance.status == 2 %}
+    	{% elif item.maintenance.status == 3 %}
     		Rejected
-    	{% else %}
+    	{% elif item.maintenance.status == 1 %}
     		Waiting	
 		{% endif %}
     </td>
     <td> 
-    	<form action="../detail/"  method="POST">
+    	<form action="{%url 'forms:detail'%}"  method="POST">
     		{% csrf_token %}
     		<input type="hidden" name="maintenance_id" value={{item.maintenance_id}}>
     		<input type="submit" value="Detail" />
@@ -45,6 +45,26 @@
 	</td>
   </tr>  
   {% endfor %} 
- 
 </table>
+{% if schedule_and_pic_set.has_other_pages %}
+  <ul class="pagination">
+    {% if schedule_and_pic_set.has_previous %}
+      <li><a href="?page={{ schedule_and_pic_set.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in schedule_and_pic_set.paginator.page_range %}
+      {% if schedule_and_pic_set.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if schedule_and_pic_set.has_next %}
+      <li><a href="?page={{ schedule_and_pic_set.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
 {% endblock %}

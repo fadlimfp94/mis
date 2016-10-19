@@ -82,7 +82,7 @@
   </tr>
   <tr>
       <td>Document</td>
-      <td>{{ activity.document.url }}</td>     
+      <td><a href="{{ activity.document.url }}">  {{ activity.document.url }} </a>></td>     
   </tr> 
 </table>
 <br><br>
@@ -142,14 +142,16 @@
   </tr>
 </table>
 <br><br>
-<form action="../approve/"  method="POST">
+{% if request.user.is_staff %}
+<form action="{% url 'forms:approve'%}"  method="POST">
         {% csrf_token %}
         <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
         <input type="submit" value="Approve" />
 </form>
-<form action="../reject/"  method="POST">
+<form action="{% url 'forms:reject'%}"  method="POST">
         {% csrf_token %}
         <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
         <input type="submit" value="Reject" />
 </form>
+{% endif %}
 {% endblock %}

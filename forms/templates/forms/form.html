@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="{url 'create_form'}" method="post" enctype="multipart/form-data">
+<form action="{% url 'forms:create' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ schedule_and_pic_form.as_p }}
 	<p></p>

@@ -8,7 +8,7 @@ from django.utils.encoding import python_2_unicode_compatible
 @python_2_unicode_compatible	
 class Maintenance(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    status = models.IntegerField(default=0)
+    status = models.IntegerField(default=1)
     def __str__(self):
 		return "[user : "+unicode(self.user)+", status: "+unicode(self.status)+"]"
 
