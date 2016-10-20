@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 
 
 def staff_check(user):
@@ -14,6 +15,7 @@ def staff_check(user):
 def home(request):
     return redirect('/forms/display')
 
+
 @login_required(login_url='forms:login')
 @user_passes_test(staff_check)
 def approve(request):
@@ -21,6 +23,14 @@ def approve(request):
     maintenance.status = 2
     maintenance.save()
     messages.success(request, 'Maintenance Application was Approved')
+    recipient_mail = maintenance.user.email
+    send_mail(
+        'Approval',
+        'Hi, we glad to tell you that your maintenance form with ID = '+str(maintenance.id)+ ' has been approved',
+        'mailbotfadli@gmail.com',
+        [recipient_mail],
+        fail_silently=False,
+    )
     return redirect('/forms/display')
 
 @login_required(login_url='forms:login')
@@ -30,6 +40,14 @@ def reject(request):
     maintenance.status = 3
     maintenance.save()
     messages.error(request, 'Maintenance Application was Rejected')
+    recipient_mail = maintenance.user.email
+    send_mail(
+        'Rejection',
+        'Hi, we regret to tell you that your maintenance form with ID = '+str(maintenance.id)+ ' has been rejected. Please create your new form.',
+        'mailbotfadli@gmail.com',
+        [recipient_mail],
+        fail_silently=False,
+    )
     return redirect('/forms/display')
 
 @login_required(login_url='forms:login')
@@ -45,9 +63,9 @@ def detail(request):
 @login_required(login_url='forms:login')
 def display(request):
     if request.user.is_staff:
-        schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','start_date')
+        schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','-start_date')
     else:
-        schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id).order_by('maintenance__status','start_date')
+        schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id).order_by('maintenance__status','-start_date')
     page = request.GET.get('page', 1)
     paginator = Paginator(schedule_and_pic_set, 10)
     try:

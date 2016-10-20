@@ -9,6 +9,7 @@
 <table id="t01">
   <tr>
     <th>No.</th>
+    <th>Maintenance ID</th>
     <th>Start Date</th>
     <th>End Date</th>
     <th>Start Time</th>
@@ -21,6 +22,7 @@
   {% for item in schedule_and_pic_set %}
   <tr>
   	<td>  {{ forloop.counter0|add:schedule_and_pic_set.start_index }} </td>
+    <td> {{ item.maintenance_id }} </td>
     <td> {{ item.start_date }} </td>
     <td> {{ item.end_date }} </td>
     <td> {{ item.start_time }} </td>
