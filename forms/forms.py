@@ -21,6 +21,13 @@ class ScheduleAndPICForm(ModelForm):
         if end_date < start_date:
             msg = "End date should be greater than start date"
             self._errors["end_date"] = self.error_class([msg])
+        if start_date == end_date:
+            start_time = self.cleaned_data.get("start_time")
+            end_time = self.cleaned_data.get("end_time")
+            if end_time < start_time:
+                msg = "End time should be greater than start time when those two within one day"
+                self._errors["end_date"] = self.error_class([msg])
+                
             		
 class LocationAndDeviceForm(ModelForm):
     class Meta:

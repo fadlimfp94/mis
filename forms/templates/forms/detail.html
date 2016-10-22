@@ -143,15 +143,23 @@
 </table>
 <br><br>
 {% if request.user.is_staff %}
-<form action="{% url 'forms:approve'%}"  method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
-        <input type="submit" value="Approve" />
-</form>
-<form action="{% url 'forms:reject'%}"  method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
-        <input type="submit" value="Reject" />
-</form>
+  {% if maintenance.status == 1%}
+    <form action="{% url 'forms:approve'%}"  method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
+            <input type="submit" value="Approve" />
+    </form>
+    <form action="{% url 'forms:reject'%}"  method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
+            <input type="submit" value="Reject" />
+    </form>
+  {% else %}
+      <form action="{% url 'forms:reschedule'%}"  method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
+            <input type="submit" value="Reschedule" />
+      </form>
+  {% endif %}
 {% endif %}
 {% endblock %}

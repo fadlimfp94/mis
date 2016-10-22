@@ -1,16 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="{% url 'forms:create' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ schedule_and_pic_form.as_p }}
-	<p></p>
-	{{ location_and_device_form.as_p }}
-	<p></p>
-	{{ activity_form.as_p }}
-	<p></p>
-	{{ customer_impact_form.as_p }}
-	<p></p>
-	{{ device_replacement_form.as_p }}
-    <input type="submit" value="Submit" />
-</form>
+{% if reschedule %}
+	<form action="{% url 'forms:reschedule' %}" method="post" enctype="multipart/form-data">
+	    {% csrf_token %}
+	    {{ schedule_and_pic_form.as_p }}
+		<input type="hidden" name="maintenance_id" value={{maintenance_id}}>
+		<input type="hidden" name="save" value="True">
+		<p></p>
+	    <input type="submit" value="Submit" />
+	</form>
+{% else %}
+	<form action="{% url 'forms:create' %}" method="post" enctype="multipart/form-data">
+	    {% csrf_token %}
+	    {{ schedule_and_pic_form.as_p }}
+		<p></p>
+		{{ location_and_device_form.as_p }}
+		<p></p>
+		{{ activity_form.as_p }}
+		<p></p>
+		{{ customer_impact_form.as_p }}
+		<p></p>
+		{{ device_replacement_form.as_p }}
+		<p></p>
+	    <input type="submit" value="Submit" />
+	</form>
+{% endif %}
 {% endblock %}

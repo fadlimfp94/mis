@@ -63,9 +63,9 @@ def detail(request):
 @login_required(login_url='forms:login')
 def display(request):
     if request.user.is_staff:
-        schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','-start_date').annotate(site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+        schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
     else:
-        schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id).order_by('maintenance__status','-start_date')
+        schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
     page = request.GET.get('page', 1)
     paginator = Paginator(schedule_and_pic_set, 10)
     try:
@@ -89,7 +89,7 @@ def create_form(request):
         if is_valid is True:
             maintenance_obj = Maintenance(user=request.user, status=1)
             maintenance_obj.save()
-            maintenance_obj.code = str(datetime.date.today())+str(maintenance_obj.id+1000)
+            maintenance_obj.code = str(datetime.date.today().strftime('%y%m%d'))+str(maintenance_obj.id+1000)
             maintenance_obj.save()
             schedule_and_pic_obj = schedule_and_pic_form.save(commit=False)
             schedule_and_pic_obj.maintenance = maintenance_obj
@@ -115,3 +115,22 @@ def create_form(request):
         customer_impact_form = CustomerImpactForm()
         device_replacement_form = DeviceReplacementForm()
     return render(request, 'forms/form.html', {'schedule_and_pic_form' : schedule_and_pic_form, 'location_and_device_form' : location_and_device_form, 'activity_form' : activity_form, 'customer_impact_form' : customer_impact_form, 'device_replacement_form' : device_replacement_form})
+
+
+@login_required(login_url='forms:login')    
+def reschedule(request):  
+    if request.method == "POST" and request.POST.get('save'):
+        maintenance_id = request.POST.get('maintenance_id')
+        schedule_and_pic_obj = ScheduleAndPIC.objects.get(maintenance_id=maintenance_id)
+        schedule_and_pic_form = ScheduleAndPICForm(request.POST, instance=schedule_and_pic_obj)
+        is_valid = schedule_and_pic_form.is_valid()
+        if is_valid is True:
+            schedule_and_pic_form.save()
+            messages.success(request, 'Maintenance Application was Rescheduled')
+            return redirect('/forms/display')
+        return render(request, 'forms/form.html', {'schedule_and_pic_form' : schedule_and_pic_form, 'reschedule' : True, 'maintenance_id' : maintenance_id})  
+    else:
+        maintenance_id = request.POST.get('maintenance_id')
+        schedule_and_pic_obj = ScheduleAndPIC.objects.get(maintenance_id=maintenance_id)
+        schedule_and_pic_form = ScheduleAndPICForm(instance=schedule_and_pic_obj)      
+        return render(request, 'forms/form.html', {'schedule_and_pic_form' : schedule_and_pic_form, 'reschedule' : True, 'maintenance_id' : maintenance_id})   
