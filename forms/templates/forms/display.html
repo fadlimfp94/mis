@@ -10,25 +10,23 @@
   <tr>
     <th>No.</th>
     <th>Maintenance ID</th>
-    <th>Start Date</th>
-    <th>End Date</th>
-    <th>Start Time</th>
-    <th>End Time</th>
+    <th>Schedule</th>
     <th>PIC</th>
-	<th>User</th>
-	<th>Status</th>
-	<th>Detail</th>
+  	<th>Department</th>
+    <th>Site</th>
+    <th>Device ID</th>
+  	<th>Status</th>
+  	<th>Detail</th>
   </tr>
   {% for item in schedule_and_pic_set %}
   <tr>
   	<td>  {{ forloop.counter0|add:schedule_and_pic_set.start_index }} </td>
     <td> {{ item.maintenance_id }} </td>
-    <td> {{ item.start_date }} </td>
-    <td> {{ item.end_date }} </td>
-    <td> {{ item.start_time }} </td>
-    <td> {{ item.end_time }} </td>
+    <td> {{ item.start_date }}  {{ item.start_time }}  till  {{ item.end_date }}  {{ item.end_time }} </td>
     <td> {{ item.pic }} </td>
-    <td> {{ item.maintenance.user.username }} </td>
+    <td> {{ item.department }} </td>
+    <td> {{ item.site }} </td>
+    <td> {{ item.device_id }} </td>
     <td> 
     	{% if item.maintenance.status == 2 %}
     		Approved

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
-
+from django.db.models import F
 
 def staff_check(user):
     return user.is_staff
@@ -63,7 +63,7 @@ def detail(request):
 @login_required(login_url='forms:login')
 def display(request):
     if request.user.is_staff:
-        schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','-start_date')
+        schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','-start_date').annotate(site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
     else:
         schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id).order_by('maintenance__status','-start_date')
     page = request.GET.get('page', 1)
@@ -88,6 +88,8 @@ def create_form(request):
         is_valid = schedule_and_pic_form.is_valid() and location_and_device_form.is_valid() and activity_form.is_valid() and customer_impact_form.is_valid() and device_replacement_form.is_valid()
         if is_valid is True:
             maintenance_obj = Maintenance(user=request.user, status=1)
+            maintenance_obj.save()
+            maintenance_obj.code = str(datetime.date.today())+str(maintenance_obj.id+1000)
             maintenance_obj.save()
             schedule_and_pic_obj = schedule_and_pic_form.save(commit=False)
             schedule_and_pic_obj.maintenance = maintenance_obj

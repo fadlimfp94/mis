@@ -3,12 +3,14 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
+from django.core.validators import RegexValidator
 
 # Create your models here.
 @python_2_unicode_compatible	
 class Maintenance(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     status = models.IntegerField(default=1)
+    code = models.CharField(max_length=10,validators=[RegexValidator(regex='^.{10}$', message='Length has to be 4', code='nomatch')])
     def __str__(self):
 		return "[user : "+unicode(self.user)+", status: "+unicode(self.status)+"]"
 
@@ -28,8 +30,8 @@ class LocationAndDevice(models.Model):
     maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE)
     fiberhood = models.CharField(max_length=30)
     site = models.CharField(max_length=30)
-    cluster = models.CharField(max_length=30)
-    floor_slash_block = models.CharField(max_length=30)
+    cluster = models.CharField(max_length=30, blank=True)
+    floor_slash_block = models.CharField(max_length=30, blank=True)
     device_id = models.CharField(max_length=30)
     device_port = models.CharField(max_length=30)
 
@@ -51,11 +53,11 @@ class CustomerImpact(models.Model):
 #@python_2_unicode_compatible	
 class DeviceReplacement(models.Model):
     maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE)
-    old_device_id = models.CharField(max_length=30) 
-    old_device_type = models.CharField(max_length=30)
-    old_serial_number = models.CharField(max_length=30)
-    old_barcode = models.CharField(max_length=30)
-    new_device_id = models.CharField(max_length=30)
-    new_device_type = models.CharField(max_length=30)
-    new_serial_number = models.CharField(max_length=30)
-    new_barcode = models.CharField(max_length=30)
+    old_device_id = models.CharField(max_length=30, blank=True) 
+    old_device_type = models.CharField(max_length=30, blank=True)
+    old_serial_number = models.CharField(max_length=30, blank=True)
+    old_barcode = models.CharField(max_length=30, blank=True)
+    new_device_id = models.CharField(max_length=30, blank=True)
+    new_device_type = models.CharField(max_length=30, blank=True)
+    new_serial_number = models.CharField(max_length=30, blank=True)
+    new_barcode = models.CharField(max_length=30, blank=True)
