@@ -28,7 +28,7 @@ class ScheduleAndPIC(models.Model):
 #@python_2_unicode_compatible	
 class LocationAndDevice(models.Model):
     maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE)
-    fiberhood = models.CharField(max_length=30)
+    fiberhood = models.CharField(max_length=30, blank=True)
     site = models.CharField(max_length=30)
     cluster = models.CharField(max_length=30, blank=True)
     floor_slash_block = models.CharField(max_length=30, blank=True)

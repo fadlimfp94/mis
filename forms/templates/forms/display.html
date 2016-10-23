@@ -6,6 +6,30 @@
     {% endfor %}
 </div>
 
+
+<div class="container">
+  <form role="form" class="form-horizontal" action="{% url 'forms:display' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <div class="col-sm-3"><label>Start Date</label><input type="date" class="form-control" name="start_date"></div>
+      <div class="col-sm-3"><label>End Date</label><input type="date" class="form-control" name="end_date"></div>
+      <div class="col-sm-3">
+          <label>Status</label>
+          <select name="status" class="form-control">
+            <option value=0>All</option>
+            <option value=1>Waiting</option>
+            <option value=2>Approved</option>
+            <option value=3>Rejected</option>
+          </select>
+      </div>
+      <br>
+      <div><label></label><button type="submit" class="btn btn-info pull-right" >Search</button></div>
+      
+    </div>
+  </form>
+  <hr>
+</div>
+
 <table id="t01">
   <tr>
     <th>No.</th>

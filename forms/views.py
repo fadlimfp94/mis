@@ -60,12 +60,37 @@ def detail(request):
     device_replacement = DeviceReplacement.objects.get(maintenance_id=maintenance.id)
     return render(request, 'forms/detail.html', {'maintenance' : maintenance, 'schedule_and_pic' : schedule_and_pic, 'location_and_device' : location_and_device, 'activity' : activity, 'customer_impact' : customer_impact, 'device_replacement' : device_replacement})
 
+def checking(var):
+    return ((var is not None) and (var != ''))
+
 @login_required(login_url='forms:login')
 def display(request):
+    start_date = request.POST.get('start_date')
+    end_date = request.POST.get('end_date')
+    status = request.POST.get('status')
+    start_date_checking = checking(start_date)
+    end_date_checking = checking(end_date)
+    status_checking = checking(status)
     if request.user.is_staff:
-        schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+        if start_date_checking and end_date_checking and status_checking: 
+            if status == '0':
+                schedule_and_pic_set = ScheduleAndPIC.objects.filter(start_date__gte=start_date, end_date__lte=end_date).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+            else:
+                schedule_and_pic_set = ScheduleAndPIC.objects.filter(start_date__gte=start_date, end_date__lte=end_date, maintenance__status=status).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+        elif status_checking and (status != '0'):
+            schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__status=status).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+        else:   
+            schedule_and_pic_set = ScheduleAndPIC.objects.all().order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
     else:
-        schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+        if start_date_checking and end_date_checking and status_checking:
+            if status == '0':
+                schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id,start_date__gte=start_date, end_date__lte=end_date).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+            else:
+                schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id, start_date__gte=start_date, end_date__lte=end_date, maintenance__status=status).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+        elif status_checking and (status != '0'):
+            schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id, maintenance__status=status).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
+        else:   
+            schedule_and_pic_set = ScheduleAndPIC.objects.filter(maintenance__user_id=request.user.id).order_by('maintenance__status','-start_date').annotate(code=F('maintenance__code'),site=F('maintenance__locationanddevice__site'),device_id=F('maintenance__locationanddevice__device_id'))
     page = request.GET.get('page', 1)
     paginator = Paginator(schedule_and_pic_set, 10)
     try:
