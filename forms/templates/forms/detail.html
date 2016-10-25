@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<table id="t01">
-  <tr>
+<div class="table-responsive">
+<table id="t01" class="table table-striped table-bordered table-hover">
+  <th colspan="2">
     Schedule and PIC
-  </tr>
+  </th>
   <tr> 
       <td>Start Date</td>
       <td>{{ schedule_and_pic.start_date }}</td> 	
@@ -33,11 +34,13 @@
       <td>{{ schedule_and_pic.department }}</td>     
   </tr> 
 </table>
+</div>
 <br><br>
-<table id="t01">
-  <tr>
+<div class="table-responsive">
+<table id="t01" class="table table-striped table-bordered table-hover">
+  <th colspan="2">
     Location and Device
-  </tr>
+  </th>
   <tr> 
       <td>Fiberhood</td>
       <td>{{ location_and_device.fiberhood }}</td>  
@@ -63,11 +66,13 @@
       <td>{{ location_and_device.device_port }}</td>     
   </tr> 
 </table>
+</div>
 <br><br>
-<table id="t01">
-  <tr>
+<div class="table-responsive">
+<table id="t01" class="table table-striped table-bordered table-hover">
+  <th colspan="2">
     Activity
-  </tr>
+  </th>
   <tr> 
       <td>Sympton of Problem</td>
       <td>{{ activity.symptom_of_problem }}</td>  
@@ -85,11 +90,13 @@
       <td><a href="{{ activity.document.url }}">  {{ activity.document.url }} </a>></td>     
   </tr> 
 </table>
+</div>
 <br><br>
-<table id="t01">
-  <tr>
+<div class="table-responsive">
+<table id="t01" class="table table-striped table-bordered table-hover">
+  <th colspan="2">
     Customer Impact
-  </tr>
+  </th>
   <tr> 
       <td>Count of Customer Impact</td>
       <td>{{ customer_impact.count_of_customer_impact }}</td>  
@@ -103,11 +110,13 @@
       <td>{{ customer_impact.service_interrupt }}</td>     
   </tr> 
 </table>
+</div>
 <br><br>
-<table id="t01">
-  <tr>
+<div class="table-responsive">
+<table id="t01" class="table table-striped table-bordered table-hover">
+  <th colspan="2">
     Device Replacement
-  </tr>
+  </th>
   <tr> 
       <td>Old Device ID</td>
       <td>{{ device_replacement.old_device_id }}</td>  
@@ -141,25 +150,38 @@
       <td>{{ device_replacement.new_barcode }}</td>     
   </tr>
 </table>
+</div>
 <br><br>
 {% if request.user.is_staff %}
   {% if maintenance.status == 1%}
     <form action="{% url 'forms:approve'%}"  method="POST">
             {% csrf_token %}
             <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
-            <input type="submit" value="Approve" />
+            <input type="submit" class="btn btn-success" value="Approve" />
     </form>
     <form action="{% url 'forms:reject'%}"  method="POST">
             {% csrf_token %}
             <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
-            <input type="submit" value="Reject" />
+            <input type="submit" class="btn btn-danger" value="Reject" />
     </form>
   {% else %}
       <form action="{% url 'forms:reschedule'%}"  method="POST">
             {% csrf_token %}
             <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
-            <input type="submit" value="Reschedule" />
+            <input type="submit" class="btn btn-warning" value="Reschedule" />
       </form>
   {% endif %}
+<div class="container">
+  <form role="form" class="form-horizontal" action="{% url 'forms:approve' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <input type="hidden" name="maintenance_id" value={{maintenance.id}}>
+      <input type="submit" class="btn btn-success" value="Approve" name="approve"/>
+      <input type="submit" class="btn btn-danger" value="Reject" name="reject"/> 
+    </div>
+  </form>
+  <hr>
+</div>
+
 {% endif %}
 {% endblock %}
