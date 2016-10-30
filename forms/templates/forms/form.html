@@ -1,72 +1,93 @@
 {% extends 'base.html' %}
 {% block content %}
-{% if reschedule %}
-	<form action="{% url 'forms:reschedule' %}" method="post" enctype="multipart/form-data">
-	    {% csrf_token %}
-	    {{ schedule_and_pic_form.as_p }}
-		<input type="hidden" name="maintenance_id" value={{maintenance_id}}>
-		<input type="hidden" name="save" value="True">
-		<p></p>
-	    <input type="submit" value="Submit" />
-	</form>
-{% else %}
-	<form action="{% url 'forms:create' %}" method="post" enctype="multipart/form-data">
-	    {% csrf_token %}
-	    {{ schedule_and_pic_form.as_p }}
-		<p></p>
-		{{ location_and_device_form.as_p }}
-		<p></p>
-		{{ activity_form.as_p }}
-		<p></p>
-		{{ customer_impact_form.as_p }}
-		<p></p>
-		{{ device_replacement_form.as_p }}
-		<p></p>
-	    <input type="submit" value="Submit" />
-	</form>
-{% endif %}
-
-<div class="container">
-  <h2>Bootstrap Mixed Form <p class="lead">with horizontal and inline fields</p></h2>
-  <form role="form" class="form-horizontal">
-    <div class="form-group">
-      {{ schedule_and_pic_form.as_p }}
-    </div>
-    <div class="form-group">
-      <label class="col-sm-1" for="inputEmail1">Email</label>
-      <div class="col-sm-5"><input type="email" class="form-control" id="inputEmail1" placeholder="Email"></div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-1" for="inputPassword1">Password</label>
-      <div class="col-sm-5"><input type="password" class="form-control" id="inputPassword1" placeholder="Password"></div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-12" for="TextArea">Textarea</label>
-      <div class="col-sm-6"><textarea class="form-control" id="TextArea"></textarea></div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-3"><label>First name</label><input type="text" class="form-control" placeholder="First"></div>
-      <div class="col-sm-3"><label>Last name</label><input type="text" class="form-control" placeholder="Last"></div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-12">Phone number</label>
-      <div class="col-sm-1"><input type="text" class="form-control" placeholder="000"><div class="help">area</div></div>
-      <div class="col-sm-1"><input type="text" class="form-control" placeholder="000"><div class="help">local</div></div>
-      <div class="col-sm-2"><input type="text" class="form-control" placeholder="1111"><div class="help">number</div></div>
-      <div class="col-sm-2"><input type="text" class="form-control" placeholder="123"><div class="help">ext</div></div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-1">Options</label>
-      <div class="col-sm-2"><input type="text" class="form-control" placeholder="Option 1"></div>
-      <div class="col-sm-3"><input type="text" class="form-control" placeholder="Option 2"></div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-6">
-        <button type="submit" class="btn btn-info pull-right">Submit</button>
+<div class="c-form-container section-container section-container-image-bg">
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-6 col-sm-offset-3 c-form-box wow fadeInUp">
+            {% if reschedule %}
+            <div class="c-form-top">
+               <div style="text-align: center">
+                  <h3>Maintenance Application Form</h3>
+                  <p>Please fill the form below to make reschedule</p>
+               </div>
+            </div>
+            <br>                      
+            <div class="c-form-bottom">
+               <form action="{% url 'forms:reschedule' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{ schedule_and_pic_form.as_p }}
+                  <input type="hidden" name="maintenance_id" value={{maintenance_id}}>
+                  <input type="hidden" name="save" value="True">
+                  <br>
+                  <input type="submit" value="Reschedule" class="btn btn-info btn-block" style="margin-bottom: 25%;"/>
+               </form>
+            </div>
+            {% elif user_form %}
+            <div class="c-form-top">
+               <div style="text-align: center">
+                  <h3>My Profile</h3>
+                  <p>Please refill the form below to update your profile</p>
+               </div>
+            </div>
+            <br>                      
+            <div class="c-form-bottom">
+               <form action="{% url 'forms:profile' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{ user_form }}
+                  <div class="form-group">
+                     <label for="c-form-name">
+                        <span class="label-text">New password:</span> 
+                     </label>
+                     <input type="password" name="new_password" class="c-form-name form-control" placeholder="Enter new password">
+                  </div>
+                  <div class="form-group">
+                     <label for="c-form-name">
+                        <span class="label-text">New password:</span> 
+                     </label>
+                     <input type="password" name="re_new_password" class="c-form-name form-control" placeholder="Retype new password">
+                  </div>
+                  <input type="hidden" name="save" value="True">
+                  <br>
+                  <input type="submit" value="Save" class="btn btn-info btn-block" style="margin-bottom: 25%;"/>
+               </form>
+            </div>
+            {% else %}
+            <div class="c-form-top">
+               <div style="text-align: center">
+                  <h3>Maintenance Application Form</h3>
+                  <p>Please fill the form below to request your maintenance application</p>
+               </div>
+            </div>
+            <br>
+            <div class="c-form-bottom">
+               <form action="{% url 'forms:create' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <h4>Schedule and PIC</h4>
+                  <br>
+                  {{ schedule_and_pic_form.as_p }}
+                  <br>
+                  <h4>Location and Device</h4>
+                  <br>
+                  {{ location_and_device_form.as_p }}
+                  <br>
+                  <h4>Maintenance Activity</h4>
+                  <br>
+                  {{ activity_form.as_p }}
+                  <br>
+                  <h4>Customer Impact</h4>
+                  <br>
+                  {{ customer_impact_form.as_p }}
+                  <br>
+                  <h4>Device Replacement</h4>
+                  <br>
+                  {{ device_replacement_form.as_p }}
+                  <br>
+                  <input type="submit" class="btn btn-info btn-block form-button" style="margin-bottom: 25%;" value="Send" />
+               </form>
+            </div>
+            {% endif %}                      
+         </div>
       </div>
-    </div>
-  </form>
-  <hr>
+   </div>
 </div>
-
 {% endblock %}
