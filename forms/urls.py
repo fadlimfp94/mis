@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^approve/', views.approve, name='approve'),
     url(r'^profile/', views.profile, name='profile'),
     url(r'^login/$', login, {'template_name': 'login.html', 'authentication_form': forms.LoginForm}, name='login'),
-    url(r'^logout/$', logout, {'next_page': '/forms/login'}, name='logout'),	
+    url(r'^logout/$', logout, {'next_page': 'forms:login'}, name='logout'),	
 ]

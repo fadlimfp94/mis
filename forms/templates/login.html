@@ -50,11 +50,19 @@
                                 </div>
                             </div>
                             <div class="form-bottom">
+                                {% if form.errors %}
+                                    <p style="text-align: center; font-color:#b50000">Your username and password didn't match. Please try again.</p>
+                                {% endif %}    
                                 <form class="c-form-bottom" method="post" action="{% url 'forms:login'%}">
                             {% csrf_token %}
 
                         <p class="bs-component">
-                            {{ form}}
+                            {% with field=form.username %}
+                            {% include "form-field.html" %}
+                            {% endwith %}
+                            {% with field=form.password %}
+                            {% include "form-field.html" %}
+                            {% endwith %}
                         </p>
                         <br>
                         <p class="bs-component">

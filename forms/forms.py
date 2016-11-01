@@ -74,6 +74,7 @@ class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm,self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['autofocus'] = 'on'
+        self.error_messages['invalid_login'] = "Your username and password didn't match. Please try again."
 
 
 class UserForm(ModelForm):

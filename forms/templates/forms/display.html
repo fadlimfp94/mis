@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = "display-container">
-<div class="messages">
+<div class="messages notification">
    {% for message in messages %}
-   <p>{{ message }}</p>
+   <p style="text-align: center; bottom: 20%; font-color:#d35400">{{ message }}</p>
    {% endfor %}
 </div>
 <div class="container">
