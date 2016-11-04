@@ -6,7 +6,7 @@
          <div class="col-sm-6 col-sm-offset-3 c-form-box wow fadeInUp">
             {% if reschedule %}
             <div class="c-form-top">
-               <div style="text-align: center">
+               <div style="text-align: center;">
                   <h3>Maintenance Application Form</h3>
                   <p>Please fill the form below to make reschedule</p>
                </div>
@@ -62,25 +62,25 @@
             <div class="c-form-bottom">
                <form action="{% url 'forms:create' %}" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
-                  <h4>Schedule and PIC</h4>
+                  <h4 >Schedule and PIC</h4>
                   <br>
-                  {{ schedule_and_pic_form.as_p }}
+                  {{ schedule_and_pic_form }}
                   <br>
                   <h4>Location and Device</h4>
                   <br>
-                  {{ location_and_device_form.as_p }}
+                  {{ location_and_device_form }}
                   <br>
                   <h4>Maintenance Activity</h4>
                   <br>
-                  {{ activity_form.as_p }}
+                  {{ activity_form }}
                   <br>
                   <h4>Customer Impact</h4>
                   <br>
-                  {{ customer_impact_form.as_p }}
+                  {{ customer_impact_form }}
                   <br>
                   <h4>Device Replacement</h4>
                   <br>
-                  {{ device_replacement_form.as_p }}
+                  {{ device_replacement_form }}
                   <br>
                   <input type="submit" class="btn btn-info btn-block form-button" style="margin-bottom: 25%;" value="Send" />
                </form>

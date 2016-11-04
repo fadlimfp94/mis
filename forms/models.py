@@ -33,7 +33,7 @@ class LocationAndDevice(models.Model):
     cluster = models.CharField(max_length=30, blank=True)
     floor_slash_block = models.CharField(max_length=30, blank=True)
     device_id = models.CharField(max_length=30)
-    device_port = models.CharField(max_length=30)
+    device_port = models.TextField(max_length=30)
 
 #@python_2_unicode_compatible	
 class Activity(models.Model):

@@ -30,7 +30,15 @@ class ScheduleAndPICForm(ModelForm):
                 self._errors["end_date"] = self.error_class([msg])
     def __init__(self, *args, **kwargs):
         super(ScheduleAndPICForm,self).__init__(*args, **kwargs)
-        self.fields['start_date'].widget.attrs['autofocus'] = 'on'            
+        self.fields['start_date'].widget.attrs['autofocus'] = 'on'
+        self.fields['start_date'].label = "Start Date *"
+        self.fields['end_date'].label = "End Date *"
+        self.fields['start_time'].label = "Start Time *"
+        self.fields['end_time'].label = "End Time *"
+        self.fields['pic'].label = "PIC *"
+        self.fields['phone_number'].label = "Phone Number *"
+        self.fields['department'].label = "Department *"
+
 
             		
 class LocationAndDeviceForm(ModelForm):
@@ -39,8 +47,8 @@ class LocationAndDeviceForm(ModelForm):
         fields = ('fiberhood', 'site','cluster','floor_slash_block','device_id','device_port')
         widgets = {'fiberhood': TextInput(attrs={'class' : 'form-control'}),'site': TextInput(attrs={'class' : 'form-control'}),
                    'cluster': TextInput(attrs={'class' : 'form-control'}),'floor_slash_block': TextInput(attrs={'class' : 'form-control'}),
-                   'device_id' : TextInput(attrs={'class' : 'form-control'}), 'device_port' : TextInput(attrs={'class' : 'form-control'})}
-	labels = {'floor_slash_block': _('Floor / block'),}
+                   'device_id' : TextInput(attrs={'class' : 'form-control'}), 'device_port' : Textarea(attrs={'class' : 'form-control'})}
+	labels = {'floor_slash_block': _('Floor / Block'),'site': _('Site *'), 'device_id': _('Device ID *'), 'device_port': _('Device Port *')}
 
 
 class ActivityForm(ModelForm):
@@ -48,16 +56,22 @@ class ActivityForm(ModelForm):
         model = Activity
         fields = ('symptom_of_problem','action_plan','estimation_duration','document')	
         widgets = {'symptom_of_problem' : Textarea(attrs={'class' : 'form-control'}), 'action_plan' : Textarea(attrs={'class' : 'form-control'}), 
-                'estimation_duration' : TextInput(attrs={'class' : 'form-control'}), 'document' : FileInput(attrs={'class' : 'form-control'})
+                'estimation_duration' : TextInput(attrs={'class' : 'form-control'}), 'document' : FileInput(attrs={'class' : 'form-control'})        
         }	
-	labels = {'document': _('MOP Document')}
+	labels = {'document': _('MOP Document *'), 'symptom_of_problem': _('Symptom of Problem *'), 'action_plan': _('Action Plan *'),'estimation_duration': _('Estimation Duration *')}
+
 class CustomerImpactForm(ModelForm):
     class Meta:
         model = CustomerImpact
         fields = ('count_of_customer_impact', 'network_interrupt','service_interrupt')
         widgets = {'count_of_customer_impact' : TextInput(attrs={'class' : 'form-control'}), 'network_interrupt' : Textarea(attrs={'class' : 'form-control'}),
                     'service_interrupt' : Textarea(attrs={'class' : 'form-control'})
-        }
+        }    
+    def __init__(self, *args, **kwargs):
+        super(CustomerImpactForm,self).__init__(*args, **kwargs)
+        self.fields['count_of_customer_impact'].label = "Count of Customer Impact *"
+        self.fields['network_interrupt'].label = 'Network Interrupt *'
+        self.fields['service_interrupt'].label = 'Service Interrupt *'
 
 class DeviceReplacementForm(ModelForm):
     class Meta:
@@ -66,6 +80,10 @@ class DeviceReplacementForm(ModelForm):
         widgets = {'old_device_id' : TextInput(attrs={'class' : 'form-control'}), 'old_device_type' : TextInput(attrs={'class' : 'form-control'}), 'old_serial_number' : TextInput(attrs={'class' : 'form-control'}), 'old_barcode' : TextInput(attrs={'class' : 'form-control'}),
                     'new_device_id' : TextInput(attrs={'class' : 'form-control'}), 'new_device_type' : TextInput(attrs={'class' : 'form-control'}), 'new_serial_number' : TextInput(attrs={'class' : 'form-control'}), 'new_barcode' : TextInput(attrs={'class' : 'form-control'})
         }
+    labels = {'old_device_id': _('Old Device ID'), 'old_serial_number': _('Old Serial Number'), 'old_device_type': _('Old Device Type'), 'old_barcode': _('Old Barcode'),
+            'new_device_type': _('New Device Type'), 'new_device_id': _('New Device ID'), 'new_serial_number': _('New Serial Number'), 'new_barcode': _('New Barcode')
+    }    
+
 class LoginForm(AuthenticationForm):
     username = CharField(label="Username", max_length=30, 
                                widget=TextInput(attrs={'class': 'form-control', 'name': 'username', 'placeholder':'Username...'}))
@@ -92,4 +110,7 @@ class UserForm(ModelForm):
         password =  self.cleaned_data.get("password")
         if not user.check_password(password):
             msg = "Current Password wrong"
-            self._errors["password"] = self.error_class([msg])       
+            self._errors["password"] = self.error_class([msg])
+    def __init__(self, *args, **kwargs):
+        super(UserForm,self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs['readonly'] = True               

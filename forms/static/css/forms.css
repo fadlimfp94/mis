@@ -14,10 +14,10 @@ td {
     color: white;
 }
 table#t01 tr:nth-child(even) {
-    background-color: #00aa55;
+    background-color: #1496BB;
 }
 table#t01 tr:nth-child(odd) {
-    background-color: #1ba39c;
+    background-color: #43ABC9;
 }
 table#t01 th {
     background-color: #B22222;
